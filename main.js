@@ -12,9 +12,9 @@ Game.registerMod('TrueOffline', {
             locStrings['Offline duration: <b>%1</b> (<b>%2 frames</b>) (<b>x%3</b>)'] = 'Offline duration: <b>%1</b> (<b>%2 frames</b>) (<b>x%3</b>)';
             locStrings['Will be done in: %1'] = 'Will be done in: %1';
         }
-        Game.LoadMod('https://cursedsliver.github.io/TrueOffline/locPatches/'+(localStorageGet('CookieClickerLang') ?? 'EN')+'.js');
+        Game.LoadMod(this.locFoldersLink+(localStorageGet('CookieClickerLang') ?? 'EN')+'.js');
     },
-    locFoldersLink: 'https://cursedsliver.github.io/TrueOffline/locPatches',
+    locFoldersLink: 'https://cursedsliver.github.io/true-offline/locPatches',
     PForPauseModLink: 'https://cursedsliver.github.io/CCCEM/PForPause.js',
     PForPauseLoaded: false,
     simulating: false,
@@ -41,7 +41,7 @@ Game.registerMod('TrueOffline', {
         Game.Prompt(`<id simulationOngoing><noClose><h3>${loc('Simulating offline progress...')}</h3>
             <div class="line"></div><div class="block">
                 <span id="simulationTimeLeft">${loc('Offline duration: <b>%1</b> (<b>%2 frames</b>) (<b>x%3</b>)', [this.digitalTimeDisplay(this.simulationTime), SimpleBeautify(Math.floor(this.simulationTime * Game.fps), SimpleBeautify(this.simulationTickMultiplier))])}</span>
-                <div id="simulationProgressBar" style="width:100%;background-color:#000;border:1px solid #fff;height:20px;border-radius:2px;position:relative;padding: 1px;">
+                <div id="simulationProgressBar" style="width:100%;background-color:#000;border:1px solid #fff;height:20px;border-radius:2px;position:relative;padding:1px;margin-top:4px;">
                     <div id="simulationProgressFill" style="background-color:#dee9ea;height:100%;width:0%;"></div>
                 </div>
                 <div style="margin-top:0.5em;font-size:0.8em;">
