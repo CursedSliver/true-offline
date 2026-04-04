@@ -64,8 +64,11 @@ Game.registerMod('TrueOffline', {
         Game.Draw(); 
         l('simulationTimeLeft').innerHTML = loc('Offline duration: <b>%1</b> (<b>%2 frames</b>) (<b>x%3</b>)', [this.digitalTimeDisplay(this.simulationTime), SimpleBeautify(Math.floor(this.simulationTime * Game.fps)), SimpleBeautify(this.simulationTickMultiplier)]);
         l('simulationProgressFill').style.width = `${Math.floor(100 * (1 - this.simulationTime / this.originalSimulationTime))}%`;
-        const curve = Math.pow(Math.pow(1 - this.simulationDrawFramesRan / (3 * Game.fps), 0), 0.5);
-        this.computationRate = Math.max(curve, 0.99) * this.computationRate + Math.max(curve * 0.1, 0.01) * ticks; //magic
+        if (this.simulationDrawFramesRan > (3 * Game.fps)) {
+            this.computationRate = 0.998 * this.computationRate + 0.002 * ticks * Game.fps; //magic
+        } else {
+            this.computationRate = ticks * Game.fps;
+        }
         l('simulationProgressETA').textContent = this.digitalTimeDisplay(this.simulationTime * Game.fps / this.simulationTickMultiplier / this.computationRate);
         this.lastDrawn = PForPause.realDate();
         this.simulationDrawFramesRan++;
