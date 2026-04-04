@@ -139,7 +139,7 @@ Game.registerMod('TrueOffline', {
         this.locPatched = true;
     },
     save: function() {
-        return `${PForPause.realDate() - 10000000000}`; //testing purposes
+        return `${PForPause.realDate()}`; //testing purposes
     },
     load: function(str) {
         const timestamp = parseInt(str);
