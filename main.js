@@ -106,7 +106,7 @@ Game.registerMod('TrueOffline', {
         }
     },
     skipSimulation: function() {
-        this.speedUpSimulation(1000);
+        this.speedUpSimulation(Math.min(this.simulationTickMultiplier * mult, this.simulationTime * Game.fps / this.simulationSkipTickCount, this.maxSimulationTickMultiplier));
         if (l('promptOption0')) { l('promptOption0').style.display = 'none'; }
         if (l('promptOption1')) { l('promptOption1').style.display = 'none'; }
     },
