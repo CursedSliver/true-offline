@@ -1,4 +1,5 @@
 Game.registerMod('TrueOffline', {
+    version: '1.1.0',
     init: function() {
         Game.LoadMod(this.PForPauseModLink);
         const int = setInterval(context => {
@@ -12,7 +13,7 @@ Game.registerMod('TrueOffline', {
             locStrings['Offline duration: <b>%1</b> (<b>%2 frames</b>) (<b>x%3</b>)'] = 'Offline duration: <b>%1</b> (<b>%2 frames</b>) (<b>x%3</b>)';
             locStrings['Will be done in: %1'] = 'Will be done in: %1';
         }
-        Game.LoadMod(this.locFoldersLink+(localStorageGet('CookieClickerLang') ?? 'EN')+'.js');
+        Game.LoadMod(this.locFoldersLink+'/'+(localStorageGet('CookieClickerLang') ?? 'EN')+'.js');
     },
     locFoldersLink: 'https://cursedsliver.github.io/true-offline/locPatches',
     PForPauseModLink: 'https://cursedsliver.github.io/CCCEM/PForPause.js',
@@ -50,12 +51,8 @@ Game.registerMod('TrueOffline', {
             </div>
             <div class="block">
                 ${loc('Click "speed up" to double the speed of the simulation at the cost of a bit of accuracy. Can be used repeatedly.')}
-                <div class="line"></div>
-                ${loc('Click "skip" to speed up the simulation to the maximum amount.')}
-                <div class="line"></div>
-                ${loc('Click "cancel" to cancel the simulation entirely.')}
             </div>
-        `, [[loc('Speed up'), 'Game.mods.TrueOffline.speedUpSimulation(2)'], [loc('Skip'), 'Game.mods.TrueOffline.skipSimulation()'], [loc('Cancel'), 'Game.mods.TrueOffline.endSimulation()']], 0);
+        `, [[loc('Speed up'), 'Game.mods.TrueOffline.speedUpSimulation(2)'], [loc('Max speed'), 'Game.mods.TrueOffline.skipSimulation()'], [loc('Abort'), 'Game.mods.TrueOffline.endSimulation()']], 0);
         setTimeout(context => {
             context.tickSimulation();
         }, 0, this);
@@ -107,6 +104,7 @@ Game.registerMod('TrueOffline', {
     },
     skipSimulation: function() {
         this.speedUpSimulation(1000);
+        if (l('promptOption0')) { l('promptOption0').style.display = 'none'; }
         if (l('promptOption1')) { l('promptOption1').style.display = 'none'; }
     },
     endSimulation: function() {
