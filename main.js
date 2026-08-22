@@ -217,6 +217,9 @@
         this.locPatched = true;
     },
     save: function() {
+        if (!window.PForPause) {
+            return `${Date.now()}`;
+        }
         return `${PForPause.realDate()}`; //testing purposes
     },
     loadTimeout: 0,
