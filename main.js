@@ -80,6 +80,9 @@
         this.simulating = true;
         this.originalGameSpeed = PForPause.timeFactor;
         this.simulationStart = PForPause.realDate();
+        this.simulationTickMultiplier = 1;
+        this.simulationDrawFramesRan = 0;
+        this.computationRate = 0;
         Game.prefs.autosave = 0;
         PForPause.changeGameSpeed(0);
         Game.Prompt(`<id simulationOngoing><noClose><h3>${loc('Simulating offline progress...')}</h3>
@@ -102,11 +105,11 @@
             } catch(e) {
                 console.error(e);
                 context.endSimulation();
-                context.handleSimulationError(context);
+                context.handleSimulationError(context, e);
             }
         }, 0, this);
     },
-    handleSimulationError: function(context) {
+    handleSimulationError: function(context, e) {
         if (context.savedCumulativeRealTime) {
             PForPause.cumulativeRealTime = context.savedCumulativeRealTime;
         }
@@ -148,7 +151,7 @@
         else { this.endSimulation(); }
     },
     tickLogicUntilDraw: function(mult) {
-        if (!this.simulating) { return; }
+        if (!this.simulating) { return 0; }
         const repeats = Math.max(Math.min(2000, this.simulationTime * Game.fps / this.simulationTickMultiplier - 10), 1);
         PForPause.changeGameSpeed(mult);
         for (let i = 0; i < repeats; i++) { 
@@ -162,7 +165,7 @@
         return repeats;
     },
     tickLogic: function(mult, repeats) {
-        if (!this.simulating) { return; }
+        if (!this.simulating) { return 0; }
         PForPause.changeGameSpeed(mult);
         for (let i = 0; i < repeats; i++) { 
             Game.Logic(); 
@@ -189,6 +192,9 @@
             PForPause.cumulativeRealTime = this.savedCumulativeRealTime; 
             console.log('Time restored!', (this.savedCumulativeRealTime - Date.now()) / 1000, (PForPause.realDate() - this.simulationStart) / 1000);
         } else {
+            if (Object.is(PForPause.cumulativeRealTime, NaN)) { 
+                PForPause.cumulativeRealTime = PForPause.realDate();
+            }
             console.log('Time drifted!', (this.savedCumulativeRealTime - Date.now()) / 1000, (PForPause.realDate() - this.simulationStart) / 1000);
         }
         Game.prefs.autosave = this.autosaveBackup;
@@ -240,7 +246,7 @@
             } catch(e) {
                 console.error(e);
                 this.endSimulation();
-                this.handleSimulationError(this);
+                this.handleSimulationError(this, e);
             }
         } else {
             const int = setInterval(context => {
@@ -253,7 +259,7 @@
                     } catch(e) {
                         console.error(e);
                         context.endSimulation();
-                        context.handleSimulationError(context);
+                        context.handleSimulationError(context, e);
                     }
                 }
                 context.loadTimeout++;
